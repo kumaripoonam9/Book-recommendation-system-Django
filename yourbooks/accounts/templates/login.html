@@ -1,0 +1,64 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include 'includes/common.html' %}
+    {% block head %}
+    <link rel="stylesheet" href="{% static '../static/css/login-signup.css' %}">
+    {% endblock head %}
+</head>
+
+
+
+
+
+<body class="bg-darker text-dull-white">
+
+    {% include 'includes/navbartop.html' %}
+
+
+
+    <!-- main content -->
+    <main>
+        <div class="container p-5 pb-4 col-5 ms-auto">
+            <h1 class="text-center">login</h1>
+
+            <p class="pt-3 text-center">Log in to yourbooks and meet your next favourite book! <br>Never stop reading.</p>
+
+            <form class="pt-3">
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                    <input type="email" id="form1Example1" class="form-control" />
+                    <label class="form-label" for="form1Example1">Email address</label>
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <input type="password" id="form1Example2" class="form-control" />
+                    <label class="form-label" for="form1Example2">Password</label>
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-light btn-block">Login</button>
+            </form>
+
+            <p class="pt-5 text-center">
+                <small class="">
+                    Not a registered user? <br>
+                    <a href="signup">Signup here</a>
+                </small>
+            </p>
+
+
+        </div>
+    </main>
+    <!-- end main content -->
+
+
+    {% include 'includes/footer.html' %}
+
+</body>
+
+</html>

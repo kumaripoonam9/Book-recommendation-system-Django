@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-md navbar-dark p-md-4 bg-image"
+    style="background-image: url('../static/images/home/bgbooks.jpg'); overflow: visible;">
+        <div class="container-fluid">
+
+            <a class="navbar-brand brand-name" href="/">yourbooks</a>
+
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="searchbooks">Search books</a>
+                    </li>
+                    <li class="nav-item align-items-center">
+
+                        {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-light dropdown-toggle pl-3 pr-3 pt-2 pb-2" type="button" id="dropdownMenuButton"
+                                data-mdb-toggle="dropdown" aria-expanded="false">
+                                <span class="text-lowercase">Hi</span> {{request.user.username}}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton" >
+                                <li><a class="dropdown-item" href="#">
+                                    <button class="btn w-100 btn-sm btn-dark">Profile</button>
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <form action="accounts/logout" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="w-100 btn btn-sm btn-dark">logout</button>
+                                    </form>
+                                </a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <p><a href="accounts/login">Login/Signup</a></p>
+                    {% endif %}
+
+                        
+                        
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="bg-black p-2"></div>

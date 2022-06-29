@@ -1,0 +1,128 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include 'includes/common.html' %}
+    {% block head %}
+    <link rel="stylesheet" href="{% static '../static/css/profile.css' %}">
+    {% endblock head %}
+</head>
+
+
+
+
+<body class="bg-darker text-dull-white">
+
+    <nav class="navbar navbar-expand-md navbar-dark p-md-4 bg-image"
+        style="background-image: url('../static/images/home/bgbooks.jpg'); overflow: visible;">
+        <div class="container-fluid">
+
+            <a class="navbar-brand brand-name" href="/">yourbooks</a>
+
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../searchbooks">Search books</a>
+                    </li>
+                    <li class="nav-item align-items-center">
+
+                        {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-light dropdown-toggle pl-3 pr-3 pt-2 pb-2"
+                                type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
+                                <span class="text-lowercase">Hi</span> {{request.user.first_name}}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+                                aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="../accounts/profile">
+                                        <button class="btn w-100 btn-sm btn-dark">Profile</button>
+                                    </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                        <form action="logout" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="w-100 btn btn-sm btn-dark">logout</button>
+                                        </form>
+                                    </a></li>
+                            </ul>
+                        </div>
+                        {% else %}
+                        <a class="nav-link active" href="login">Login/Signup</a>
+                        {% endif %}
+
+
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="bg-black p-2"></div>
+
+
+    <!-- main content -->
+    <main>
+        <div class="container p-5 pb-4 col-md-8">
+            <h1 class="text-center">Profile</h1>
+
+            <p class="pt-3 text-center">Never stop reading!!</p>
+
+            <div class="row profile">
+                <div class="col-md-4 text-end">
+                    <img src="../static/images/profile/books.png" alt="">
+                </div>
+                <div class="col-md-8">
+                    <h3 class="pb-4">Hi Reader!</h3>
+
+                    <i>
+                        <p>Your details are provided below:</p>
+                    </i>
+
+                    <table class="table table-bordered text-dull-white border-light">
+
+                        <tbody>
+                            <tr>
+                                <th scope="row">Name</th>
+
+                                <td>{{request.user.first_name}} {{request.user.last_name}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Username</th>
+                                <td>{{request.user.username}}</td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row">Email</th>
+                                <td>{{request.user.email}}</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </main>
+    <!-- end main content -->
+
+
+    {% include 'includes/footer.html' %}
+
+
+</body>
+
+</html>

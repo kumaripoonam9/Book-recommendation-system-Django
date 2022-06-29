@@ -1,0 +1,306 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include 'includes/common.html' %}
+    {% block head %}
+    <link rel="stylesheet" href="{% static '../static/css/searchbooks.css' %}">
+    {% endblock head %}
+</head>
+
+<!-- style for modal -->
+<style>
+    .modal .bookdetails {
+        padding: 2rem 4rem 2rem 3rem;
+        color: black;
+
+    }
+
+    .modal .modal-content {
+        background-color: #F3F3F3;
+    }
+
+    .ratings {
+        color: rgb(243, 160, 7);
+    }
+
+    .modal .bookdetails img {
+        -webkit-box-shadow: 10px 10px 13px -9px rgba(133, 133, 133, 1);
+        -moz-box-shadow: 10px 10px 13px -9px rgba(133, 133, 133, 1);
+        box-shadow: 10px 10px 13px -9px rgba(133, 133, 133, 1);
+    }
+</style>
+
+
+<body class="bg-darker text-dull-white">
+
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark p-md-4 bg-image"
+        style="background-image: url('../static/images/home/bgbooks.jpg'); overflow: visible;">
+        <div class="container-fluid">
+
+            <a class="navbar-brand brand-name" href="/">yourbooks</a>
+
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="../searchbooks">Search books</a>
+                    </li>
+                    <li class="nav-item align-items-center">
+
+                        {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-light dropdown-toggle pl-3 pr-3 pt-2 pb-2"
+                                type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
+                                <span class="text-lowercase">Hi</span> {{request.user.first_name}}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+                                aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="../accounts/profile">
+                                        <button class="btn w-100 btn-sm btn-dark">Profile</button>
+                                    </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                        <form action="../accounts/logout" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="w-100 btn btn-sm btn-dark">logout</button>
+                                        </form>
+                                    </a></li>
+                            </ul>
+                        </div>
+                        {% else %}
+                        <p><a href="../accounts/login">Login/Signup</a></p>
+                        {% endif %}
+
+
+
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="bg-black p-2"></div>
+
+    <!-- main content -->
+    <main>
+        <div class="container m-md-5">
+            <div class="container m-md-md-5 p-md-5 pt-md-0">
+                <h1 class="text-center p-md-3 pb-md-4">search books</h1>
+
+                <p>Meet your new favourite book here!</p>
+
+                <!-- search bar -->
+                <form action="/searchbooks" method="get">
+
+                    <div class="input-group rounded pb-md-5">
+                        <input type="search" name="query" id="query" class="form-control rounded" placeholder="Search"
+                            aria-label="Search" aria-describedby="search-addon" />
+                        <span class="input-group-text border-0" id="search-addon">
+                            <i class="fas fa-search text-dull-white"></i>
+                        </span>
+                    </div>
+
+                </form>
+
+
+
+                <h3 class="secondary-headings pb-md-4">
+                    <span id="search_title ">
+
+                        {% if query == False or query == "" %}
+                        Read something different today!
+                        <br>
+                        <small><small><small><i><small>Here are some random recommendations for you to try something
+                                            new!</small></i></small></small></small>
+
+
+                        {% else %}
+                        Results for <q>{{query}}</q>
+                        <br>
+                        <small><small><small><i><small>
+                                            {% ifequal error "" %}
+                                            Here are top 6 recommendations according to the title you searched!
+                                            {% endifequal %}
+
+                                            {% ifnotequal error "" %}
+                                            <span class="text-danger">{{error}}</span>
+                                            {% endifnotequal %}
+                                        </small></i></small></small></small>
+                        {% endif %}
+
+
+                    </span>
+
+                </h3>
+
+                <!-- {{randomBooks}} -->
+
+                <div class="row row-cols-1 row-cols-md-4 g-4 book-recommendations">
+
+                    {% block content %}
+                    {% for bookid, book in randomBooks.items %}
+
+                    <div class="col">
+                        <!-- add class="building-link" in a tag -->
+                        <a href="../bookdetails" data-mdb-toggle="modal" data-mdb-target="#bookModal"
+                            class="text-dull-white building-link" data-title="{{book.title}}"
+                            data-author="{{book.author}}" data-rating="{{book.rating}}"
+                            data-totalratings="{{book.totalratings}}" data-reviews="{{book.reviews}}"
+                            data-bookformat="{{book.bookformat}}" data-isbn="{{book.isbn}}" data-pages="{{book.pages}}"
+                            data-desc="{{book.desc}}" data-img="{{book.img}}">
+                            <div class="card bg-dark h-100">
+                                <img src="{{book.img}}" class="card-img-top" />
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ book.title }}</h5>
+                                    <p class="card-text"> <small>{{ book.author }}</small></p>
+                                </div>
+                            </div>
+                        </a>
+
+                        <div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel"
+                            aria-hidden="true">
+
+                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                                <div class="modal-content ">
+
+                                    <div class="row bookdetails">
+                                        <div class="col-5 text-center">
+                                            <img id="building-img" src="" class="rounded" />
+                                        </div>
+
+                                        <div class="col-7">
+                                            <h1 id="building-title"></h1>
+                                            <h3 class="text-muted">by <span id="building-author"></span></h3>
+
+                                            <div class="ratings mt-4">
+
+                                                <!-- <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star-half-stroke"></i> -->
+                                                <!-- <i class="fa-regular fa-star"></i> -->
+
+
+                                                <span id="building-rating"></span>
+                                                <i class="fa-solid fa-star"></i> |
+                                                <span id="building-totalratings"></span> ratings |
+                                                <span id="building-reviews"></span> reviews
+
+
+                                            </div>
+
+                                            <p class="mt-5"><span id="building-bookformat"></span>, <span
+                                                    id="building-pages"></span> pages</p>
+                                            <p>ISBN code: <span id="building-isbn"></span></p>
+
+                                            <p class="mt-5" id="building-desc">
+
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    {% endfor %}
+                    {% endblock content %}
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel"
+                        aria-hidden="true">
+
+                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                            <div class="modal-content ">
+
+                                <div class="row bookdetails">
+                                    <div class="col-5 text-center">
+                                        <img src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1380855834l/1001369.jpg"
+                                            class="rounded" />
+                                    </div>
+
+                                    <div class="col-7">
+                                        <h1>Wild Men, Wild Alaska: Finding What Lies Beyond the Limits</h1>
+                                        <h3 class="text-muted">by <span>Rocky McElveen</span></h3>
+
+                                        <div class="ratings mt-4">
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star"></i>
+                                            <i class="fa-solid fa-star-half-stroke"></i>
+                                            <!-- <i class="fa-regular fa-star"></i> -->
+
+                                            <i>
+                                                <span id="book_rating">4.11</span> |
+                                                <span id="book_total_ratings">327</span> ratings |
+                                                <span id="book_reviews">27</span> reviews
+                                            </i>
+
+                                        </div>
+
+                                        <p class="mt-5"><span id="book_format">Paperback</span>, <span
+                                                id="book_pages">224</span> pages</p>
+                                        <p>ISBN code: <span id="book_isbn">785289011</span></p>
+
+                                        <p class="mt-5">
+                                            In Wild Men, Wild Alaska professional hunting and fishing guide and
+                                            outfitter
+                                            Rocky McElveen tells the stories of his own adventures as well as those of
+                                            some
+                                            of his well-known clients. The book takes readers directly into the Alaskan
+                                            bush, and shares the intense challenges of a majestic wilderness that pushes
+                                            a
+                                            man to his limits.
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <!-- end main content -->
+
+
+    {% include 'includes/footer.html' %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $('.building-link').click(function () {
+            $('#building-title').html($(this).data('title'));
+            $('#building-author').html($(this).data('author'));
+            $('#building-rating').html($(this).data('rating'));
+            $('#building-totalratings').html($(this).data('totalratings'));
+            $('#building-reviews').html($(this).data('reviews'));
+            $('#building-bookformat').html($(this).data('bookformat'));
+            $('#building-isbn').html($(this).data('isbn'));
+            $('#building-desc').html($(this).data('desc'));
+            $('#building-pages').html($(this).data('pages'));
+            $('#building-img').attr('src', $(this).data('img'));
+        });
+    </script>
+
+</body>
+
+</html>

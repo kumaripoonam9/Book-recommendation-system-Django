@@ -1,0 +1,91 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include 'includes/common.html' %}
+    {% block head %}
+    <link rel="stylesheet" href="{% static '../static/css/home.css' %}">
+    {% endblock head %}
+</head>
+
+<body class="bg-darker text-dull-white">
+
+    <!-- Jumbotron -->
+    <div class="main-bg bg-image pt-5 text-center shadow-1-strong text-white"
+        style="background-image: url('../static/images/home/bgbooks.jpg');">
+        <!-- img blur -->
+        <div class="container">
+            <h1 class="pt-5 pb-3" style="font-size: 2em;">yourbooks</h1>
+            <q>Read the best books first, or you may not have a chance to read them at all.</q>
+            <p>~ Henry David Thoreau</p>
+
+            <div class="nav mt-5 pt-5 col-md-4 home-nav">
+                <p><a href="/" class="active">Home</a></p>
+                <p><a href="searchbooks">Search books</a></p>
+                {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-mdb-toggle="dropdown" aria-expanded="false">
+                            <span class="text-lowercase">Hi</span> {{request.user.first_name}}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton" >
+                            <li><a class="dropdown-item" href="accounts/profile">
+                                <button class="btn w-100 btn-sm btn-dark">Profile</button>
+                            </a></li>
+                            <li><a class="dropdown-item" href="#">
+                                <form action="accounts/logout" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="w-100 btn btn-sm btn-dark">logout</button>
+                                </form>
+                            </a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <p><a href="accounts/login">Login/Signup</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- end Jumbotron -->
+
+
+
+
+    <!-- main content -->
+    <main class="pb-4">
+        <div class="container">
+            <div class="row mt-5">
+
+                <div class="col-7">
+                    <p><i>Looking for a great summer read?<br>
+                            Want to read more books like the one you’re interested in?<br>
+                            Deciding what to read next?
+                        </i></p>
+                    <p><i></i></p>
+                    <p>You’re in the right place. Tell us what titles you’ve enjoyed in the past, <br>and we’ll give you
+                        surprisingly insightful recommendations.</p>
+                </div>
+
+                <!-- register -->
+                <div class="col-5">
+                    <p class="h3">Discover & read more</p>
+                    <p class="h5">Register now to get personalized book recommendations</p>
+                    <a href="accounts/signup">
+                        <button type="button" class="btn btn-lg pt-2 pb-2 pl-5 pr-5 mt-2 btn-outline-light">Register</button>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <!-- end main content -->
+
+
+    {% include 'includes/footer.html' %}
+
+
+</body>
+
+</html>
