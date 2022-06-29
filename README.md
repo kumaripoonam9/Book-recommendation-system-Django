@@ -4,4 +4,4 @@
 ## Note:
 This recommendation system uses goodreads dataset from Kaggle
 
-Link: [https://www.kaggle.com/datasets/mdhamani/goodreads-books-100k]
+Link: https://www.kaggle.com/datasets/mdhamani/goodreads-books-100k
